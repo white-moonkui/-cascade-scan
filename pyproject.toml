@@ -1,0 +1,54 @@
+[project]
+name = "cascade-scan"
+version = "0.2.0"
+description = "AI Agent security evaluation framework — automated red-teaming for LLM tool-call governance."
+authors = [{ name = "cascade" }]
+license = { text = "MIT" }
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "agent-armour>=0.7.0",
+]
+keywords = ["ai", "agent", "security", "red-team", "llm", "governance"]
+
+[project.scripts]
+cascade-scan = "cascade_scan.cli:main"
+
+[project.urls]
+homepage = "https://github.com/white-moonkui/cascade-scan"
+repository = "https://github.com/white-moonkui/cascade-scan"
+documentation = "https://github.com/white-moonkui/cascade-scan#readme"
+
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project.optional-dependencies]
+dev = ["pytest>=7", "ruff>=0.6", "pyright>=1.1"]
+eval = ["openai>=1.0", "anthropic>=0.30"]  # for live-agent evaluation
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+addopts = "-q --tb=short"
+filterwarnings = ["ignore::DeprecationWarning"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP"]
+ignore = ["E501"]
+
+[tool.pyright]
+include = ["src/cascade_scan"]
+exclude = ["**/__pycache__", "build", "dist"]
+typeCheckingMode = "basic"
+pythonVersion = "3.10"
+reportMissingTypeStubs = false
+reportUnknownMemberType = false
