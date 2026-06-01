@@ -22,6 +22,8 @@ from cascade_scan.probes import (
 )
 from cascade_scan.scorer import SecurityScorer
 from cascade_scan.report import export_html, export_json
+from cascade_scan.evolve import Evolver, EvolutionResult
+from cascade_scan.baseline import BaselineManager, BaselineData, ComparisonResult
 
 __all__ = [
     "ScanEngine",
@@ -38,4 +40,9 @@ __all__ = [
     "SecurityScorer",
     "export_html",
     "export_json",
+    "Evolver",
+    "EvolutionResult",
+    "BaselineManager",
+    "BaselineData",
+    "ComparisonResult",
 ]

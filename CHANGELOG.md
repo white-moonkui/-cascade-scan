@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.3.0] — 2026-06 — CI/CD & Evolution Platform
+
+### Added
+- **GitHub Actions CI workflow**: Python 3.10–3.12, ruff lint, pytest
+- **`--fail-below` threshold**: `cascade-scan run --fail-below 80` exits 1 if score below threshold (CI integration)
+- **Evolve mode**: `cascade-scan evolve --iterations 5` — iterative security evaluation with min/max/avg/std deviation tracking
+- **Baseline management**: `cascade-scan baseline save|compare <path>` — save and compare scan results across versions
+- **Custom scenario import**: `cascade-scan import-scenario <file>` — load attack scenarios from JSON/YAML files
+- **20 new tests** for evolve, baseline, and scenario import (78 total)
+
+### Changed
+- **CLI**: all 8 probes accessible via `--probes`; `run`/`score` support `--fail-below`
+- **78 tests** (up from 58)
+
 ## [0.2.0] — 2026-06 — Probe Matrix Expansion
 
 ### Added

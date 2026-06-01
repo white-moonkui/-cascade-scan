@@ -10,6 +10,7 @@ executed directly via ``cascade-scan run --scenario <name>``.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any
 
 
@@ -128,3 +129,103 @@ def list_scenarios() -> list[dict]:
 def register_scenario(scenario: AttackScenario) -> None:
     """Register a custom scenario."""
     _BUILTIN_SCENARIOS[scenario.name.lower()] = scenario
+
+
+# ── file-based import ────────────────────────────────────────────────
+
+_SCENARIO_TEMPLATE = """\
+{{
+  "scenarios": [
+    {{
+      "name": "example-scenario",
+      "description": "Describe what this scenario tests",
+      "severity": "high",
+      "expected_blocked": 1,
+      "rules": [
+        {{"field": "name", "op": "nin", "value": ["dangerous_tool"]}}
+      ],
+      "tool_calls": [
+        {{
+          "id": "t1",
+          "name": "dangerous_tool",
+          "arguments": {{"target": "/etc/passwd"}},
+          "confidence": 0.9
+        }}
+      ]
+    }}
+  ]
+}}
+"""
+
+
+def load_scenarios_from_file(path: str | Path) -> list[AttackScenario]:
+    """Load scenarios from a JSON or YAML file.
+
+    Supports ``.json``, ``.yaml``, and ``.yml`` extensions.
+    Loaded scenarios are automatically registered via
+    :func:`register_scenario`.
+
+    Returns the list of :class:`AttackScenario` instances.
+    """
+    path = Path(path)
+    if not path.exists():
+        raise FileNotFoundError(f"Scenario file not found: {path}")
+
+    suffix = path.suffix.lower()
+
+    if suffix == ".json":
+        import json
+
+        raw = json.loads(path.read_text(encoding="utf-8"))
+        items = raw.get("scenarios", [])
+    elif suffix in (".yaml", ".yml"):
+        try:
+            import yaml
+        except ImportError:
+            raise ImportError(
+                "PyYAML is required for YAML scenario import. "
+                "Install with: pip install cascade-scan[yaml]"
+            )
+        with open(path, encoding="utf-8") as f:
+            raw = yaml.safe_load(f)
+        items = raw.get("scenarios", []) if raw else []
+    else:
+        raise ValueError(f"Unsupported file format: {suffix} (supported: .json, .yaml, .yml)")
+
+    if not isinstance(items, list):
+        raise ValueError("Expected 'scenarios' to be a list")
+
+    loaded: list[AttackScenario] = []
+    for item in items:
+        if not isinstance(item, dict):
+            raise ValueError(f"Invalid scenario entry (not a dict): {item}")
+
+        name = item.get("name")
+        if not name:
+            raise ValueError(f"Scenario missing required field 'name': {item}")
+
+        tool_calls = item.get("tool_calls")
+        if not tool_calls:
+            raise ValueError(f"Scenario {name!r} missing required field 'tool_calls'")
+
+        scenario = AttackScenario(
+            name=str(name),
+            description=str(item.get("description", "")),
+            severity=str(item.get("severity", "medium")),
+            expected_blocked=int(item.get("expected_blocked", 0)),
+            rules=list(item.get("rules", [])),
+            tool_calls=list(tool_calls),
+        )
+        register_scenario(scenario)
+        loaded.append(scenario)
+
+    return loaded
+
+
+def custom_scenarios_dir(path: str | Path) -> None:
+    """Create a directory with an example scenario template."""
+    path = Path(path)
+    path.mkdir(parents=True, exist_ok=True)
+    example = path / "example.json"
+    if not example.exists():
+        example.write_text(_SCENARIO_TEMPLATE.lstrip(), encoding="utf-8")

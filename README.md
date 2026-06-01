@@ -70,14 +70,19 @@ print(result.summary())
 ## CLI Reference
 
 ```bash
-cascade-scan run              # Run all probes
-cascade-scan score            # Score only
-cascade-scan list-scenarios   # List built-in attack scenarios
-cascade-scan run --probes xss,rce   # Run specific probes
-cascade-scan run --rule name:delete_file   # Add blocklist rule
+cascade-scan run                          # Run all probes
+cascade-scan score                        # Score only
+cascade-scan list-scenarios               # List built-in attack scenarios
+cascade-scan run --probes xss,rce         # Run specific probes
+cascade-scan run --rule name:delete_file  # Add blocklist rule
 cascade-scan run --min-score 80           # Set pass threshold
+cascade-scan run --fail-below 80          # Exit 1 if score < 80 (CI)
 cascade-scan run --output report.html     # Save HTML report
 cascade-scan run --output report.json     # Save JSON report
+cascade-scan evolve --iterations 5        # Iterative evaluation
+cascade-scan baseline save baseline.json  # Save current as baseline
+cascade-scan baseline compare baseline.json  # Compare vs baseline
+cascade-scan import-scenario custom.json  # Import custom attack scenarios
 ```
 
 ## Security Probes
@@ -148,6 +153,8 @@ cascade-scan
 │   ├── engine.py            # ScanEngine — probe orchestration
 │   ├── scorer.py            # SecurityScorer — weighted A+–F scoring
 │   ├── report.py            # HTML/JSON report export
+│   ├── evolve.py            # Evolver — iterative evaluation
+│   ├── baseline.py          # BaselineManager — save/load/compare
 │   ├── cli.py               # Command-line interface
 │   ├── probes/
 │   │   ├── __init__.py      # Probe base class + ProbeResult
@@ -163,7 +170,7 @@ cascade-scan
 │   │   ├── __init__.py
 │   │   └── registry.py      # 5 built-in attack scenarios
 │   └── _models.py           # Shared data models
-├── tests/                   # 58 tests
+├── tests/                   # 78 tests
 │   ├── test_engine.py
 │   ├── test_probes.py
 │   ├── test_scorer.py
