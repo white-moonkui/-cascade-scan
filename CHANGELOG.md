@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.4.0] — 2026-06 — Escalation & Loop/DoS Probes
+
+### Added
+- **Escalation probe** (`escalation`): 4 multi-step privilege-escalation
+  attack chains (shadow read→su, cron persistence, docker escape) —
+  verifies pipeline breaks the chain
+- **Loop/DoS probe** (`loop-dos`): 3 attack modes — 100-call burst
+  throughput test, self-referential tool call detection, deeply nested
+  argument parsing resilience
+- `ConditionVerifier.deny_by_default` support in pipeline (requires
+  `agent-armour>=0.9.0`)
+
+### Changed
+- `cascade-scan` CLI now auto-registers `escalation` and `loop-dos`
+  probes in `--probes` and `run`/`score` commands
+- Version bumped to 0.4.0
+
 ## [0.3.0] — 2026-06 — CI/CD & Evolution Platform
 
 ### Added

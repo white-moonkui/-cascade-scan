@@ -77,6 +77,10 @@ from cascade_scan.probes.rce import RCEProbe
 from cascade_scan.probes.tool_chain import ToolChainProbe
 from cascade_scan.probes.data_flow import DataFlowProbe
 
+# Phase S2.3 probes
+from cascade_scan.probes.escalation import EscalationProbe
+from cascade_scan.probes.loop_dos import LoopDoSProbe
+
 __all__ = [
     "Probe",
     "ProbeResult",
@@ -88,4 +92,6 @@ __all__ = [
     "RCEProbe",
     "ToolChainProbe",
     "DataFlowProbe",
+    "EscalationProbe",
+    "LoopDoSProbe",
 ]

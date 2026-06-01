@@ -35,6 +35,8 @@ from cascade_scan.probes import (
     RCEProbe,
     ToolChainProbe,
     DataFlowProbe,
+    EscalationProbe,
+    LoopDoSProbe,
 )
 from cascade_scan.scenarios import get_scenario, list_scenarios, AttackScenario
 from cascade_scan.baseline import BaselineManager
@@ -90,6 +92,8 @@ def _get_probes(args: argparse.Namespace) -> list:
         "rce": RCEProbe(),
         "tool-chain": ToolChainProbe(),
         "data-flow": DataFlowProbe(),
+        "escalation": EscalationProbe(),
+        "loop-dos": LoopDoSProbe(),
     }
 
     if args.probes:
