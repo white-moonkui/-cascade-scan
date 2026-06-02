@@ -37,12 +37,13 @@ class LoopDoSProbe(Probe):
 
     # Simple allow-all rules for baseline throughput measurement
     PERMIT_RULES: list[dict] = [
-        {"field": "name", "op": "nin", "value": []},
+        {"field": "name", "op": "in", "value": ["read_file", "write_file", "search", "list", "get"]},
     ]
 
     # Block-everything rules for rejection throughput measurement
+    # (in: pass only if name is in allowlist — so anything else is blocked)
     DENY_RULES: list[dict] = [
-        {"field": "name", "op": "nin", "value": ["read_file", "write_file"]},
+        {"field": "name", "op": "in", "value": ["read_file", "write_file"]},
     ]
 
     def run(self, pipeline: Any, **kwargs) -> ProbeResult:
