@@ -84,6 +84,7 @@ from cascade_scan.probes.loop_dos import LoopDoSProbe
 # v0.5.0 probes — deeper cascade integration
 from cascade_scan.probes.mcp_poisoning import MCPPoisoningProbe
 from cascade_scan.probes.policy_compliance import PolicyComplianceProbe
+from cascade_scan.probes.strategy_eval import StrategyEvalProbe
 
 __all__ = [
     "Probe",
@@ -100,4 +101,5 @@ __all__ = [
     "LoopDoSProbe",
     "MCPPoisoningProbe",
     "PolicyComplianceProbe",
+    "StrategyEvalProbe",
 ]

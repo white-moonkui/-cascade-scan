@@ -39,6 +39,7 @@ from cascade_scan.probes import (
     LoopDoSProbe,
     MCPPoisoningProbe,
     PolicyComplianceProbe,
+    StrategyEvalProbe,
 )
 from cascade_scan.scenarios import get_scenario, list_scenarios, AttackScenario
 from cascade_scan.baseline import BaselineManager
@@ -98,6 +99,7 @@ def _get_probes(args: argparse.Namespace) -> list:
         "loop-dos": LoopDoSProbe(),
         "mcp-poisoning": MCPPoisoningProbe(),
         "policy-compliance": PolicyComplianceProbe(),
+        "strategy-eval": StrategyEvalProbe(),
     }
 
     if args.probes:
