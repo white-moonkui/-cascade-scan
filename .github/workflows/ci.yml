@@ -24,7 +24,9 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install agent-armour
+          # Install cascade from source (latest, includes deny_by_default, presets, YAML extends)
+          git clone --depth 1 https://github.com/white-moonkui/cascade.git /tmp/cascade
+          pip install -e /tmp/cascade
           pip install .[dev]
 
       - name: Lint with ruff
@@ -37,3 +39,4 @@ jobs:
         run: |
           cascade-scan --help
           cascade-scan list-scenarios
+          cascade-scan run --probes injection --no-injection -v || true
