@@ -185,7 +185,7 @@ def cmd_run(args: argparse.Namespace) -> int:
         if output_path.suffix == ".json":
             export_json(result, output=output_path)
         else:
-            export_html(result, output=output_path)
+            export_html(result, output=output_path, dark=getattr(args, "dark", False))
         print(f"Report saved to {output_path}")
 
     # --fail-below check
@@ -384,6 +384,8 @@ def _add_common_args(sub: argparse.ArgumentParser) -> None:
                      help="Probe profile: quick (4 critical), "
                           "standard (8 default), deep (all 14), all (14). "
                           "Default: standard. Ignored if --probes is set.")
+    sub.add_argument("--dark", action="store_true",
+                     help="Force dark mode in HTML report (default: follow OS)")
 
 
 def main(argv: Optional[list[str]] = None) -> int:
