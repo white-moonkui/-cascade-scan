@@ -24,6 +24,7 @@ from cascade_scan.probes import (
     MCPPoisoningProbe,
     PolicyComplianceProbe,
     StrategyEvalProbe,
+    FeedbackLoopProbe,
 )
 from cascade_scan.scorer import SecurityScorer
 from cascade_scan.report import export_html, export_json
@@ -47,6 +48,7 @@ __all__ = [
     "MCPPoisoningProbe",
     "PolicyComplianceProbe",
     "StrategyEvalProbe",
+    "FeedbackLoopProbe",
     "SecurityScorer",
     "export_html",
     "export_json",
