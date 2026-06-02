@@ -81,6 +81,9 @@ from cascade_scan.probes.data_flow import DataFlowProbe
 from cascade_scan.probes.escalation import EscalationProbe
 from cascade_scan.probes.loop_dos import LoopDoSProbe
 
+# v0.5.0 probes — deeper cascade integration
+from cascade_scan.probes.mcp_poisoning import MCPPoisoningProbe
+
 __all__ = [
     "Probe",
     "ProbeResult",
@@ -94,4 +97,5 @@ __all__ = [
     "DataFlowProbe",
     "EscalationProbe",
     "LoopDoSProbe",
+    "MCPPoisoningProbe",
 ]

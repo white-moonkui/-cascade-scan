@@ -19,6 +19,9 @@ from cascade_scan.probes import (
     RCEProbe,
     ToolChainProbe,
     DataFlowProbe,
+    EscalationProbe,
+    LoopDoSProbe,
+    MCPPoisoningProbe,
 )
 from cascade_scan.scorer import SecurityScorer
 from cascade_scan.report import export_html, export_json
@@ -37,6 +40,9 @@ __all__ = [
     "RCEProbe",
     "ToolChainProbe",
     "DataFlowProbe",
+    "EscalationProbe",
+    "LoopDoSProbe",
+    "MCPPoisoningProbe",
     "SecurityScorer",
     "export_html",
     "export_json",
