@@ -85,8 +85,36 @@ def _parse_rules(args: argparse.Namespace) -> list[dict]:
     return rules
 
 
+# Profile definitions: which probes to run for each profile tier.
+# - quick: critical probes only (fastest, ~1s)
+# - standard: 8 default probes (balanced, ~3s)
+# - deep: all 14 probes (comprehensive, ~10s)
+PROFILES: dict[str, list[str]] = {
+    "quick": [
+        "injection", "tool-abuse", "escalation", "loop-dos",
+    ],
+    "standard": [
+        "injection", "tool-abuse", "xss", "sqli",
+        "prompt-leak", "rce", "tool-chain", "data-flow",
+    ],
+    "deep": [
+        "injection", "tool-abuse", "xss", "sqli",
+        "prompt-leak", "rce", "tool-chain", "data-flow",
+        "escalation", "loop-dos",
+        "mcp-poisoning", "policy-compliance",
+        "strategy-eval", "feedback-loop",
+    ],
+}
+
+
 def _get_probes(args: argparse.Namespace) -> list:
-    """Return the list of probe instances to run."""
+    """Return the list of probe instances to run.
+
+    Selection precedence:
+    1. ``--probes`` (explicit list) — highest priority
+    2. ``--profile`` (named profile) — quick/standard/deep
+    3. Default: all probes
+    """
     all_probes = {
         "injection": InjectionProbe(),
         "tool-abuse": ToolAbuseProbe(),
@@ -104,6 +132,7 @@ def _get_probes(args: argparse.Namespace) -> list:
         "feedback-loop": FeedbackLoopProbe(),
     }
 
+    # Explicit --probes takes priority
     if args.probes:
         selected: list = []
         for name in args.probes:
@@ -115,6 +144,18 @@ def _get_probes(args: argparse.Namespace) -> list:
             print("No valid probes specified, using all", file=sys.stderr)
             return list(all_probes.values())
         return selected
+
+    # Profile-based selection
+    profile = getattr(args, "profile", "standard")
+    if profile and profile != "all":
+        if profile not in PROFILES:
+            valid = ", ".join(sorted(PROFILES.keys()) + ["all"])
+            print(f"Warning: unknown profile {profile!r}. Valid: {valid}",
+                  file=sys.stderr)
+            return list(all_probes.values())
+        names = PROFILES[profile]
+        return [all_probes[n] for n in names if n in all_probes]
+
     return list(all_probes.values())
 
 
@@ -338,6 +379,11 @@ def _add_common_args(sub: argparse.ArgumentParser) -> None:
                      help="Exit code 1 if score is below this threshold")
     sub.add_argument("--output", "-o", default="",
                      help="Output file for reports (.json or .html)")
+    sub.add_argument("--profile", default="standard",
+                     choices=["quick", "standard", "deep", "all"],
+                     help="Probe profile: quick (4 critical), "
+                          "standard (8 default), deep (all 14), all (14). "
+                          "Default: standard. Ignored if --probes is set.")
 
 
 def main(argv: Optional[list[str]] = None) -> int:
