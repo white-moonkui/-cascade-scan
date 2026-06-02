@@ -8,6 +8,8 @@ generates compliance-grade reports.
 Built on cascade's C₁–C₄ governance engine.
 """
 
+__version__ = "0.5.0"
+
 from cascade_scan.engine import ScanEngine, ScanResult
 from cascade_scan.probes import (
     Probe,

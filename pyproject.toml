@@ -1,6 +1,6 @@
 [project]
 name = "cascade-scan"
-version = "0.4.0"
+version = "0.5.0"
 description = "AI Agent security evaluation framework — automated red-teaming for LLM tool-call governance."
 authors = [{ name = "cascade" }]
 license = { text = "MIT" }
